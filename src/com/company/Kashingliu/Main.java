@@ -96,7 +96,6 @@ public class Main  {
         MouseAdapter DoubleClicked = new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-//                super.mouseClicked(e);
                 JList theList = (JList) e.getSource();
                 if (e.getClickCount()==2) {
                     dic_list.clear();
@@ -118,7 +117,7 @@ public class Main  {
                                 }
                             }
                         } catch (Exception exc) {
-
+                            System.out.println(exc.toString());
                         }
                     }
                 }
@@ -182,8 +181,7 @@ public class Main  {
                             test_table.setModel(tableModel);
                         }
                     }
-//                    System.out.prin);
-//                    System.out.println(tf.getText().length());
+
                 } catch (Exception e1) {
                     System.out.println(e1.toString());
                 }
