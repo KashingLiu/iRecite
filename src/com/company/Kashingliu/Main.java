@@ -68,7 +68,7 @@ public class Main  {
         // 表格内部模型
         DefaultTableModel tableModel = new DefaultTableModel(name,100);
 
-        String path = "Dict";
+
         FileReader all_dictionary_list = new FileReader("Dict/grouplist.txt");
         BufferedReader buffer = new BufferedReader(all_dictionary_list);
         String reader = "";
@@ -130,7 +130,7 @@ public class Main  {
         JPanel main = new JPanel();
 
         // 搜索框
-        java.awt.TextField tf = new java.awt.TextField();
+        java.awt.TextField tf = new java.awt.TextField(12);
 
         JTable test_table = new JTable(tableModel);
         // 表格的下拉条
@@ -173,14 +173,19 @@ public class Main  {
         tf.addTextListener((e)-> {
                 try {
                     tableModel.setRowCount(0);
+                    int len = tf.getText().length();
                     for (String[] i : dic_list) {
-                        if (i[0].substring(0, tf.getText().length()).equals(tf.getText())) {
-                            System.out.println(out(i));
+                        if ((i[0].length()>=len)&&i[0].substring(0, len).equals(tf.getText())) {
+                            System.out.println(i[0].substring(0, len));
+                            System.out.println(tf.getText());
                             tableModel.addRow(out(i));
                             test_table.setModel(tableModel);
                         }
                     }
+//                    System.out.prin);
+//                    System.out.println(tf.getText().length());
                 } catch (Exception e1) {
+                    System.out.println(e1.toString());
                 }
             });
         // main里面有搜索框和结果栏
