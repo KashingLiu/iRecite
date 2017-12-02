@@ -53,10 +53,56 @@ public class Main  {
         return out;
     }
     public static void main(String[] args) throws IOException {
+
         // 最大的frame，设置成boxlayout，横向的
         JFrame Main = new JFrame("天天背单词");
         Container ct = Main.getContentPane();
-        ct.setLayout(new BoxLayout(ct,BoxLayout.X_AXIS));
+        ct.setLayout(new BoxLayout(ct,BoxLayout.Y_AXIS));
+
+
+        // 第一个图标，单词搜索
+        ImageIcon im1_white = new ImageIcon("/Users/kashingliu/Downloads/tsg/icon/search3.png");
+        ImageIcon im1_gray = new ImageIcon("/Users/kashingliu/Downloads/tsg/icon/search1.png");
+        ImageIcon im1_black = new ImageIcon("/Users/kashingliu/Downloads/tsg/icon/search2.png");
+        // 第二个图标，背单词，图书图标
+        ImageIcon im2_gray = new ImageIcon("/Users/kashingliu/Downloads/tsg/icon/tsg1.png");
+        ImageIcon im2_white = new ImageIcon("/Users/kashingliu/Downloads/tsg/icon/tsg3.png");
+        ImageIcon im2_black = new ImageIcon("/Users/kashingliu/Downloads/tsg/icon/tsg2.png");
+        // 第三个图标，历史回顾
+        ImageIcon im3_gray = new ImageIcon("/Users/kashingliu/Downloads/tsg/icon/back1.png");
+        ImageIcon im3_white = new ImageIcon("/Users/kashingliu/Downloads/tsg/icon/back3.png");
+        ImageIcon im3_black = new ImageIcon("/Users/kashingliu/Downloads/tsg/icon/back2.png");
+
+        JRadioButton button1 = new JRadioButton(im1_white);
+        JRadioButton button2 = new JRadioButton(im2_gray);
+        JRadioButton button3 = new JRadioButton(im3_gray);
+        ButtonGroup group = new ButtonGroup();
+
+        button1.setBorderPainted(false);
+        button2.setBorderPainted(false);
+        button3.setBorderPainted(false);
+        group.add(button1);
+        group.add(button2);
+        group.add(button3);
+
+
+
+
+        JPanel up_panel = new JPanel();
+        up_panel.setLayout(new BoxLayout(up_panel,BoxLayout.X_AXIS));
+        up_panel.add(Box.createHorizontalStrut(70));
+        up_panel.add(button1);
+        up_panel.add(Box.createHorizontalStrut(10));
+        up_panel.add(button2);
+        up_panel.add(Box.createHorizontalStrut(10));
+        up_panel.add(button3);
+        up_panel.add(Box.createHorizontalStrut(70));
+
+
+
+
+        JPanel down_panel = new JPanel();
+        down_panel.setLayout(new BoxLayout(down_panel,BoxLayout.X_AXIS));
 
 
         // 把单词放入dic_list
@@ -125,12 +171,17 @@ public class Main  {
         };
         left_list.addMouseListener(DoubleClicked);
 
-        // 放置搜索框和搜索结果的main JPanel
-        JPanel main = new JPanel();
 
+        CardLayout cardLayout = new CardLayout();
+        JPanel right_panel = new JPanel(cardLayout);
+
+
+
+
+//         放置搜索框和搜索结果的main JPanel
+        JPanel main = new JPanel();
         // 搜索框
         java.awt.TextField tf = new java.awt.TextField(12);
-
         JTable test_table = new JTable(tableModel);
         // 表格的下拉条
         JScrollPane jScrollPane = new JScrollPane(test_table);
@@ -189,15 +240,145 @@ public class Main  {
         // main里面有搜索框和结果栏
         main.add(Box.createVerticalStrut(6));
         main.add(search);
-        main.add(Box.createVerticalBox());
+//        main.add(Box.createVerticalBox());
         main.add(table);
         main.add(Box.createVerticalStrut(6));
-        // Main里有main
-        Main.add(Box.createHorizontalStrut(5));
-        Main.add(left_panel);
-        Main.add(Box.createHorizontalStrut(5));
 
-        Main.add(main);
+
+
+
+
+
+
+
+        // Main里有main
+        down_panel.add(Box.createHorizontalStrut(5));
+        down_panel.add(left_panel);
+        down_panel.add(Box.createHorizontalStrut(5));
+
+
+
+        JPanel second = new JPanel();
+        second.setLayout(new BoxLayout(second,BoxLayout.X_AXIS));
+        second.add(new JButton("test"));
+        JPanel third = new JPanel();
+        third.setLayout(new BoxLayout(third,BoxLayout.X_AXIS));
+        third.add(new JButton("test"));
+
+
+        right_panel.add(main,"first");
+        right_panel.add(second,"second");
+        right_panel.add(third,"third");
+
+        ActionListener al_first = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(right_panel,"first");
+            }
+        };
+        ActionListener al_second = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(right_panel,"second");
+            }
+        };
+        ActionListener al_third = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(right_panel,"third");
+            }
+        };
+
+        ItemListener il = new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (button1.isSelected()) {
+                    button1.setIcon(im1_white);
+                    button2.setIcon(im2_gray);
+                    button3.setIcon(im3_gray);
+                }
+                else if (button2.isSelected()) {
+                    button1.setIcon(im1_gray);
+                    button2.setIcon(im2_white);
+                    button3.setIcon(im3_gray);
+                }
+                else if (button3.isSelected()) {
+                    button1.setIcon(im1_gray);
+                    button2.setIcon(im2_gray);
+                    button3.setIcon(im3_white);
+                }
+            }
+        };
+        MouseListener ml = new MouseListener() {
+            JRadioButton rb = new JRadioButton();
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                rb = (JRadioButton)e.getSource();
+                if (rb == button1) {
+                    button1.setIcon(im1_black);
+                }
+                else if (rb == button2) {
+                    button2.setIcon(im2_black);
+                }
+                else if (rb == button3) {
+                    button3.setIcon(im3_black);
+                }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                rb = (JRadioButton)e.getSource();
+                if (rb == button1) {
+                    button1.setIcon(im1_white);
+                    button2.setIcon(im2_gray);
+                    button3.setIcon(im3_gray);
+                }
+                else if (rb == button2) {
+                    button1.setIcon(im1_gray);
+                    button2.setIcon(im2_white);
+                    button3.setIcon(im3_gray);
+                }
+                else if (rb == button2) {
+                    button1.setIcon(im1_gray);
+                    button2.setIcon(im2_gray);
+                    button3.setIcon(im3_white);
+                }
+            }
+
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        };
+        button1.addMouseListener(ml);
+        button2.addMouseListener(ml);
+        button3.addMouseListener(ml);
+        button1.addItemListener(il);
+        button2.addItemListener(il);
+        button3.addItemListener(il);
+        button1.addActionListener(al_first);
+        button2.addActionListener(al_second);
+        button3.addActionListener(al_third);
+
+        cardLayout.show(right_panel,"first");
+        down_panel.add(right_panel);
+
+//        Main.add(main);
+        Main.add(Box.createVerticalStrut(20));
+        Main.add(up_panel);
+        Main.add(Box.createVerticalStrut(20));
+        Main.add(down_panel);
         Main.setMinimumSize(new Dimension(600,700));
         Main.setVisible(true);
         Main.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
