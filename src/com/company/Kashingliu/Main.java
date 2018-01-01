@@ -1,7 +1,6 @@
 package com.company.Kashingliu;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
@@ -445,8 +444,6 @@ public class Main  {
     }
     static JPanel panel_two = new JPanel();
     private static DefaultListModel<String> defaultListModel = new DefaultListModel<>();
-//    static
-
 
     public static void panel_two() throws IOException {
         JList<String> list = new JList<>(defaultListModel);
@@ -514,62 +511,6 @@ class CellRenderer extends JLabel implements ListCellRenderer {
         return this;
     }
 }
-//
-//class MyKey extends KeyAdapter {
-//    private int init_flag;
-//    MyKey(int flag) {
-//        init_flag = flag;
-//    }
-//    int return_flag() {
-//        return init_flag;
-//    }
-//    @Override
-//    public void keyPressed(KeyEvent e) {
-//        super.keyPressed(e);
-//    }
-//
-//    @Override
-//    public void keyTyped(KeyEvent e) {
-//        super.keyTyped(e);
-//        if (e.getKeyChar()==KeyEvent.VK_SPACE) {
-//            init_flag++;
-//        }
-//    }
-//
-//    @Override
-//    public void keyReleased(KeyEvent e) {
-//        super.keyReleased(e);
-//    }
-//}
-//class MyKey2 extends KeyAdapter {
-//    private int init_flag;
-//    MyKey2(int flag) {
-//        init_flag = flag;
-//    }
-//    int return_flag() {
-//        return init_flag;
-//    }
-//    @Override
-//    public void keyReleased(KeyEvent e) {
-//        super.keyReleased(e);
-//    }
-//    @Override
-//    public void keyTyped(KeyEvent e) {
-//        super.keyTyped(e);
-//        if (e.getKeyChar()==KeyEvent.VK_ESCAPE) {
-//            a.dispose();
-//        }
-//        if (e.getKeyChar()==KeyEvent.VK_SPACE) {
-//            chinese_panel.setVisible(true);
-//            chinese_word.addKeyListener(new MyKey(flag));
-//        }
-//    }
-//
-//    @Override
-//    public void keyPressed(KeyEvent e) {
-//        super.keyPressed(e);
-//    }
-//}
 
 class Recite_way_1 {
     private static JButton english_word = new JButton("english");
@@ -625,31 +566,6 @@ class Recite_way_1 {
         chinese_word.setForeground(Color.white);
         chinese_word.setFont(new Font("Helvetica",Font.PLAIN,80));
         chinese_panel.setVisible(false);
-
-
-//        KeyAdapter listen_chinese = new KeyAdapter() {
-//            @Override
-//            public void keyTyped(KeyEvent e) {
-//                super.keyTyped(e);
-//                english_word.setText(dic_list.get((Integer)iterator.next())[0]);
-//
-//            }
-//        };
-//        KeyAdapter listen_english = new KeyAdapter() {
-//            @Override
-//            public void keyTyped(KeyEvent e) {
-//                super.keyTyped(e);
-//                if (e.getKeyChar()==KeyEvent.VK_ESCAPE) {
-//                    a.dispose();
-//                }
-//                if (e.getKeyChar()==KeyEvent.VK_SPACE) {
-//                    chinese_panel.setVisible(true);
-//                    chinese_word.addKeyListener();
-//                }
-//            }
-//        };
-
-
 
         a.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         KeyAdapter key = new KeyAdapter() {
@@ -1164,30 +1080,3 @@ class Recite_way_4 {
 
     }
 }
-
-//        class Swing_OnValueChanged implements DocumentListener {
-//            JTextField init = new JTextField(30);
-//            Swing_OnValueChanged(JTextField textField) {
-//                this.init = textField;
-//            }
-//            @Override
-//            public void insertUpdate(DocumentEvent e) {
-//                for ( String[] i: dic_list) {
-//                    if (i[0].substring(0,init.getText().length()).equals(init.getText())) {
-//                        System.out.println(out(i));
-//                    }
-//                }
-//            }
-//            @Override
-//            public void changedUpdate(DocumentEvent e) {}
-//            @Override
-//            public void removeUpdate(DocumentEvent e) {
-//                for ( String[] i: dic_list) {
-//                    if (i[0].substring(0,init.getText().length()).equals(init.getText())) {
-//                        System.out.println(out(i));
-//                    }
-//                }
-//            }
-//        }
-
-//        JTextField textField = new JTextField(30);
