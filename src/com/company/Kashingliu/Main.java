@@ -135,7 +135,7 @@ public class Main  {
                 map.put(change_sharp_list_key(reader), change_sharp_list_value(reader));
             }
         }
-        System.out.println(all_list.get(0)[1]);
+//        System.out.println(all_list.get(0)[1]);
         DefaultListModel<String> left_listModel = new DefaultListModel<>();
         for (String[] i : all_list) {
             left_listModel.addElement(i[1]);
@@ -191,9 +191,6 @@ public class Main  {
         CardLayout cardLayout = new CardLayout();
         JPanel right_panel = new JPanel(cardLayout);
 
-
-
-
 //         放置搜索框和搜索结果的main JPanel
         JPanel main = new JPanel();
         // 搜索框
@@ -242,8 +239,8 @@ public class Main  {
                     int len = tf.getText().length();
                     for (String[] i : dic_list) {
                         if ((i[0].length()>=len)&&i[0].substring(0, len).equals(tf.getText())) {
-                            System.out.println(i[0].substring(0, len));
-                            System.out.println(tf.getText());
+//                            System.out.println(i[0].substring(0, len));
+//                            System.out.println(tf.getText());
                             tableModel.addRow(out(i));
                             test_table.setModel(tableModel);
                         }
@@ -432,7 +429,6 @@ public class Main  {
         down_panel.add(right_panel);
 
 
-//        Main.add(main);
         panel_two();
         Main.add(Box.createVerticalStrut(20));
         Main.add(up_panel);
@@ -452,7 +448,6 @@ public class Main  {
         defaultListModel.addElement("  ");
         defaultListModel.addElement("  ");
         defaultListModel.addElement("  ");
-//        defaultListModel.addElement("");
 
 
         Icon[] icons = { im1_gray, im1_white, im1_black };
@@ -523,7 +518,6 @@ class Recite_way_1 {
     static Iterator iterator;
 
     public void main() {
-//        aaa = 0;
         //在list或者table上加一个双击的监听器，如果触发监听器，调用类内的static方法，考察
         //怎么进入全屏界面啊？？？？
         JFrame a = new JFrame();
@@ -576,7 +570,7 @@ class Recite_way_1 {
                 if (e.getKeyChar() == KeyEvent.VK_ESCAPE) {
                     a.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                     a.dispose();
-                    System.out.println(aaa);
+//                    System.out.println(aaa);
                     aaa = 0;
                 }
                 if (e.getKeyChar() == KeyEvent.VK_SPACE) {
@@ -672,7 +666,6 @@ class Recite_way_2 {
             }
         }
         ArrayList<Integer> result = new ArrayList<>(hashSet);
-        System.out.println(result.get(0));
         iterator = result.iterator();
 
         aa = (int)iterator.next();
@@ -924,7 +917,6 @@ class Recite_way_4 {
         }
         other_choices.remove(right_choice_int);
         right_answer_index = random.nextInt(4);
-        System.out.println(right_answer_index);
         choices.get(right_answer_index).setText(selected[1]);
         Iterator other_choice = other_choices.iterator();
         for (int i = 0; i<4; i++) {
@@ -946,9 +938,6 @@ class Recite_way_4 {
 
         JPanel answer = new JPanel();
         answer.setLayout(new BoxLayout(answer,BoxLayout.Y_AXIS));
-
-//        JPanel answer_init = new JPanel();
-//        answer_init.setLayout(new BoxLayout(answer_init,BoxLayout.X_AXIS));
 
         JPanel button = new JPanel();
         button.setLayout(new BoxLayout(button,BoxLayout.X_AXIS));
@@ -1017,7 +1006,6 @@ class Recite_way_4 {
 
         // 之前不知道哪个是正确的选项，所以记录正确选项
         right_answer_index = random.nextInt(4);
-        System.out.println(right_answer_index);
         choices.get(right_answer_index).setText(selected[1]);
 
         Iterator other_choice = other_choices.iterator();
@@ -1036,7 +1024,7 @@ class Recite_way_4 {
             c.setBorderPainted(false);
             c.setFont(new Font("Helvetica",Font.PLAIN,30));
         }
-        
+
         A.add(Box.createHorizontalStrut(10));
         A.add(choice1);
         A.add(Box.createHorizontalGlue());
