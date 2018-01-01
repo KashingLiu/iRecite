@@ -894,7 +894,6 @@ class give_input_answer {
 // 考查方式：单项选择
 // 英文为题目，中文为选项
 class Recite_way_4 {
-
     static JLabel chinese = new JLabel();
     public static String[] selected;
     static int right_answer_index;
@@ -948,8 +947,20 @@ class Recite_way_4 {
         JPanel answer = new JPanel();
         answer.setLayout(new BoxLayout(answer,BoxLayout.Y_AXIS));
 
+//        JPanel answer_init = new JPanel();
+//        answer_init.setLayout(new BoxLayout(answer_init,BoxLayout.X_AXIS));
+
         JPanel button = new JPanel();
         button.setLayout(new BoxLayout(button,BoxLayout.X_AXIS));
+
+        JPanel A = new JPanel();
+        A.setLayout(new BoxLayout(A,BoxLayout.X_AXIS));
+        JPanel B = new JPanel();
+        B.setLayout(new BoxLayout(B,BoxLayout.X_AXIS));
+        JPanel C = new JPanel();
+        C.setLayout(new BoxLayout(C,BoxLayout.X_AXIS));
+        JPanel D = new JPanel();
+        D.setLayout(new BoxLayout(D,BoxLayout.X_AXIS));
 
         // 这是四个选项
         JButton choice1 = new JButton("0");
@@ -989,8 +1000,6 @@ class Recite_way_4 {
 
         // 记录挑出来那个单词在字典中的位置
         int right_choice_int = (int)choice_iterator.next();
-        System.out.println(selected[1]);
-        System.out.println(right_choice_int);
 
         // 构建一个不重复的哈希集合用来储存所有的选项
         HashSet<Integer> other_choices = new HashSet<>(4);
@@ -1005,7 +1014,6 @@ class Recite_way_4 {
         }
 
         other_choices.remove(right_choice_int);
-        System.out.println(other_choices);
 
         // 之前不知道哪个是正确的选项，所以记录正确选项
         right_answer_index = random.nextInt(4);
@@ -1023,12 +1031,34 @@ class Recite_way_4 {
         }
 
         chinese.setText(selected[0]);
-
+        chinese.setFont(new Font("Helvetica",Font.PLAIN,70));
+        for (JButton c:choices) {
+            c.setBorderPainted(false);
+            c.setFont(new Font("Helvetica",Font.PLAIN,30));
+        }
+        
+        A.add(Box.createHorizontalStrut(10));
+        A.add(choice1);
+        A.add(Box.createHorizontalGlue());
+        B.add(Box.createHorizontalStrut(10));
+        B.add(choice2);
+        B.add(Box.createHorizontalGlue());
+        C.add(Box.createHorizontalStrut(10));
+        C.add(choice3);
+        C.add(Box.createHorizontalGlue());
+        D.add(Box.createHorizontalStrut(10));
+        D.add(choice4);
+        D.add(Box.createHorizontalGlue());
+        question.add(Box.createHorizontalGlue());
         question.add(chinese);
-        answer.add(choice1);
-        answer.add(choice2);
-        answer.add(choice3);
-        answer.add(choice4);
+        question.add(Box.createHorizontalGlue());
+
+        answer.add(Box.createVerticalGlue());
+        answer.add(A);
+        answer.add(B);
+        answer.add(C);
+        answer.add(D);
+        answer.add(Box.createVerticalGlue());
 
         choice1.addActionListener(new ActionListener() {
             @Override
@@ -1066,17 +1096,16 @@ class Recite_way_4 {
             }
         });
 
-
-
-
-
-
+        main.add(Box.createVerticalStrut(20));
         main.add(question);
+        main.add(Box.createVerticalGlue());
         main.add(answer);
+        main.add(Box.createVerticalGlue());
 
-
-        main.setMinimumSize(new Dimension(300,200));
+        main.setMinimumSize(new Dimension(600,400));
         main.setVisible(true);
-
     }
 }
+
+
+
