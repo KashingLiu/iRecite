@@ -979,6 +979,11 @@ class give_input_answer {
 // 英文为题目，中文为选项
 class Recite_way_4 {
 
+    static JLabel chinese = new JLabel();
+    public static String[] selected;
+    static int right_answer_index;
+    static ArrayList<JButton> choices;
+    static Iterator choice_iterator;
     public static ArrayList<String[]> from_int_String_Array(ArrayList<Integer> in_it){
         ArrayList<String[]> out = new ArrayList<>(30);
         for (int i = 0;i<30;i++) {
@@ -988,7 +993,34 @@ class Recite_way_4 {
         }
         return out;
     }
-
+    public static String[] getSelected() {
+        return selected;
+    }
+    public static void right() {
+        selected = (String[])iterator.next();
+        int right_choice_int = (int)choice_iterator.next();
+        HashSet<Integer> other_choices = new HashSet<>(4);
+        other_choices.add(right_choice_int);
+        for (int i = 0; i < 10; i++) {
+            if (other_choices.size()==4) {
+                break;
+            }
+            other_choices.add(random.nextInt(dic_list.size()));
+        }
+        other_choices.remove(right_choice_int);
+        right_answer_index = random.nextInt(4);
+        System.out.println(right_answer_index);
+        choices.get(right_answer_index).setText(selected[1]);
+        Iterator other_choice = other_choices.iterator();
+        for (int i = 0; i<4; i++) {
+            if (i == right_answer_index) {
+                continue;
+            } else {
+                choices.get(i).setText(dic_list.get((int)other_choice.next())[1]);
+            }
+        }
+        chinese.setText(selected[0]);
+    }
     public void main() {
         JFrame main = new JFrame();
         Container ct = main.getContentPane();
@@ -998,7 +1030,7 @@ class Recite_way_4 {
         question.setLayout(new BoxLayout(question,BoxLayout.X_AXIS));
 
         JPanel answer = new JPanel();
-        answer.setLayout(new BoxLayout(answer,BoxLayout.X_AXIS));
+        answer.setLayout(new BoxLayout(answer,BoxLayout.Y_AXIS));
 
         JPanel button = new JPanel();
         button.setLayout(new BoxLayout(button,BoxLayout.X_AXIS));
@@ -1009,7 +1041,7 @@ class Recite_way_4 {
         JButton choice3 = new JButton("2");
         JButton choice4 = new JButton("3");
         // 由四个选项构成的数组
-        ArrayList<JButton> choices = new ArrayList<>(4);
+        choices = new ArrayList<>(4);
         choices.add(choice1);
         choices.add(choice2);
         choices.add(choice3);
@@ -1032,12 +1064,12 @@ class Recite_way_4 {
         ArrayList<String[]> recite_list = from_int_String_Array(result);
 
         // 迭代器，对选出来的单词的下标那个数组进行迭代
-        Iterator choice_iterator = result.iterator();
+        choice_iterator = result.iterator();
         // 迭代器，对选出来的单词所构成的String数组进行迭代
         iterator = recite_list.iterator();
 
         // 选出来一个单词，记为数组selected
-        String[] selected = (String[])iterator.next();
+        selected = (String[])iterator.next();
 
         // 记录挑出来那个单词在字典中的位置
         int right_choice_int = (int)choice_iterator.next();
@@ -1056,37 +1088,76 @@ class Recite_way_4 {
             other_choices.add(random.nextInt(dic_list.size()));
         }
 
-        ArrayList<Integer> other_choice = new ArrayList<>(other_choices);
         other_choices.remove(right_choice_int);
         System.out.println(other_choices);
 
         // 之前不知道哪个是正确的选项，所以记录正确选项
-        int right_answer_index = random.nextInt(4);
+        right_answer_index = random.nextInt(4);
+        System.out.println(right_answer_index);
         choices.get(right_answer_index).setText(selected[1]);
-        int i = 0;
-        for (JButton c:choices) {
-            if (c.getText().equals(Integer.toString(right_answer_index))) {
-                System.out.println("in");
-                continue;
 
+        Iterator other_choice = other_choices.iterator();
+
+        for (int i = 0; i<4; i++) {
+            if (i == right_answer_index) {
+                continue;
             } else {
-                c.setText(dic_list.get(other_choice.get(i))[1]);
-//                System.out.println("out");
-                i++;
+                choices.get(i).setText(dic_list.get((int)other_choice.next())[1]);
             }
         }
 
-        JLabel chinese = new JLabel("chinese");
         chinese.setText(selected[0]);
 
+        question.add(chinese);
+        answer.add(choice1);
+        answer.add(choice2);
+        answer.add(choice3);
+        answer.add(choice4);
+
+        choice1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (choice1.getText().equals(getSelected()[1])) {
+                    right();
+                }
+            }
+        });
+
+        choice2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (choice2.getText().equals(getSelected()[1])) {
+                    right();
+                }
+            }
+        });
+
+        choice3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (choice3.getText().equals(getSelected()[1])) {
+                    right();
+                }
+            }
+        });
+
+        choice4.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (choice4.getText().equals(getSelected()[1])) {
+                    right();
+                }
+            }
+        });
 
 
 
 
-        main.add(choice1);
-        main.add(choice2);
-        main.add(choice3);
-        main.add(choice4);
+
+
+        main.add(question);
+        main.add(answer);
+
 
         main.setMinimumSize(new Dimension(300,200));
         main.setVisible(true);
