@@ -186,7 +186,7 @@ public class Main  {
         };
         left_list.addMouseListener(DoubleClicked);
         // 至此，可以完成通过双击左边的选项来选择想要的字典
-        
+
         CardLayout cardLayout = new CardLayout();
         JPanel right_panel = new JPanel(cardLayout);
 
