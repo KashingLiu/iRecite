@@ -28,11 +28,13 @@ public class Main  {
     static ImageIcon im3_gray = new ImageIcon("/Users/kashingliu/Downloads/tsg/icon/back1.png");
     static ImageIcon im3_white = new ImageIcon("/Users/kashingliu/Downloads/tsg/icon/back3.png");
     static ImageIcon im3_black = new ImageIcon("/Users/kashingliu/Downloads/tsg/icon/back2.png");
-
+    // 列表中用到的图片
+    static ImageIcon question = new ImageIcon("/Users/kashingliu/Documents/iRecite/icon/Question.png");
+    // 顶上的三个按钮
     static JRadioButton button1 = new JRadioButton(im1_white);
     static JRadioButton button2 = new JRadioButton(im2_gray);
     static JRadioButton button3 = new JRadioButton(im3_gray);
-    static ButtonGroup group = new ButtonGroup();
+
 
     // 把单词放入Dic_list
     static ArrayList<String[]> dic_list = new ArrayList<>();
@@ -41,6 +43,8 @@ public class Main  {
 
     static JPanel up_panel = new JPanel();
     static JPanel down_panel = new JPanel();
+
+    // 把用#分隔的单词和汉语意思分开
     private static String[] change_sharp(String a) {
         if (a!=null){
             String[] result = a.split("#");
@@ -83,26 +87,18 @@ public class Main  {
         return out;
     }
     public static void main(String[] args) throws IOException {
-
-
         Container ct = Main.getContentPane();
         ct.setLayout(new BoxLayout(ct,BoxLayout.Y_AXIS));
 
+        // 上面三个button设置为无边框的
         button1.setBorderPainted(false);
         button2.setBorderPainted(false);
         button3.setBorderPainted(false);
-        group.add(button1);
-        group.add(button2);
-        group.add(button3);
-
-
-// 下一步是单词的考查，准备模仿provoc的来做，有多重考察方式
-            //用户输入单词，系统判断是否正确
 
         // 把一些变量的定义都放在了函数外边
 
 
-
+        // up_panel是上面的三个按钮所组成的一个panel，全局的
         up_panel.setLayout(new BoxLayout(up_panel,BoxLayout.X_AXIS));
         up_panel.add(Box.createHorizontalStrut(70));
         up_panel.add(button1);
@@ -112,20 +108,21 @@ public class Main  {
         up_panel.add(button3);
         up_panel.add(Box.createHorizontalStrut(70));
 
-
+        // 下面的panel，包括左边的选单词那里和右边的查单词、考查方式等等
         down_panel.setLayout(new BoxLayout(down_panel,BoxLayout.X_AXIS));
-
 
         // 对第一个功能，下面的表格中添加列名
         name.add("English");
         name.add("中文");
+
         // 表格内部模型
         DefaultTableModel tableModel = new DefaultTableModel(name,100);
 
-
+        // 读取外部的字典列表，以键值对方式存
         FileReader all_dictionary_list = new FileReader("Dict/grouplist.txt");
         BufferedReader buffer = new BufferedReader(all_dictionary_list);
         String reader = "";
+        // all_list是储存字典列表那个中文和文件名字的
         ArrayList<String[]> all_list = new ArrayList<>(50);
         Map map = new HashMap();
         while (reader != null) {
@@ -135,28 +132,36 @@ public class Main  {
                 map.put(change_sharp_list_key(reader), change_sharp_list_value(reader));
             }
         }
-//        System.out.println(all_list.get(0)[1]);
+        // left_listModel是存中文名字的，词典的中文名
         DefaultListModel<String> left_listModel = new DefaultListModel<>();
         for (String[] i : all_list) {
             left_listModel.addElement(i[1]);
         }
+        // left_list是左边那个列表
         JList<String> left_list = new JList<>(left_listModel);
+        // left_panel是左边放list的panel
         JPanel left_panel = new JPanel();
         left_panel.setLayout(new BoxLayout(left_panel, BoxLayout.Y_AXIS));
         JScrollPane list_left = new JScrollPane(left_list);
         left_panel.add(Box.createVerticalStrut(10));
         left_panel.add(list_left);
         left_panel.add(Box.createVerticalStrut(10));
+        // 这里是对左边那个列表添加鼠标双击事件
         MouseAdapter DoubleClicked = new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 JList theList = (JList) e.getSource();
+                // 如果点击次数为2，说明选中
                 if (e.getClickCount()==2) {
+                    // 清空dic_list，hashSet
                     dic_list.clear();
                     hashSet.clear();
+                    // 把右面那个单词的table也清空
                     tableModel.setRowCount(0);
+                    // 通过双击的位置获取选择的是哪一项
                     int index = theList.locationToIndex(e.getPoint());
                     if (index >= 0) {
+                        // 获取到了哪一项之后，就读取对应的文件
                         Object o = theList.getModel().getElementAt(index);
                         try {
                             String path = "Dict/"+map.get(o.toString());
@@ -167,6 +172,7 @@ public class Main  {
                             while ( string != null ) {
                                 string = br.readLine();
                                 if (string!=null) {
+                                    // 既在单词列表中添加，又在表格中添加
                                     dic_list.add(change_sharp(string));
                                     tableModel.addRow(change_sharp(string));
                                 }
@@ -179,15 +185,8 @@ public class Main  {
             }
         };
         left_list.addMouseListener(DoubleClicked);
-
-
-
-//        try {
-//            System.out.println(dic_list.get(0)[0]);
-//        } catch (IndexOutOfBoundsException e) {
-//            System.out.println(e.getCause().toString());
-//            // 请在左侧选择词典
-//        }
+        // 至此，可以完成通过双击左边的选项来选择想要的字典
+        
         CardLayout cardLayout = new CardLayout();
         JPanel right_panel = new JPanel(cardLayout);
 
@@ -425,6 +424,8 @@ public class Main  {
         button2.addActionListener(al_second);
         button3.addActionListener(al_third);
 
+
+        // 第一张显示考察单词的那个
         cardLayout.show(right_panel,"first");
         down_panel.add(right_panel);
 
@@ -443,17 +444,22 @@ public class Main  {
 
     public static void panel_two() throws IOException {
         JList<String> list = new JList<>(defaultListModel);
-        defaultListModel.addElement("1");
-        defaultListModel.addElement("2");
-        defaultListModel.addElement("  ");
-        defaultListModel.addElement("  ");
-        defaultListModel.addElement("  ");
+        list.setFixedCellHeight(100);
+        list.setFixedCellWidth(400);
+        list.setVisibleRowCount(6);
+        defaultListModel.addElement("复习模式");
+        defaultListModel.addElement("填空模式");
+        defaultListModel.addElement("选择模式");
+//        defaultListModel.addElement("  ");
+//        defaultListModel.addElement("  ");
 
 
-        Icon[] icons = { im1_gray, im1_white, im1_black };
+//        Icon[] icons = { im1_gray, im1_white, im1_black };
         // 传递的参数，为自己加入的icon
-        Icon[] new_icons = new Icon[5];
-        new_icons[0] = im1_black;
+        Icon[] new_icons = new Icon[3];
+        new_icons[0] = question;
+        new_icons[1] = question;
+        new_icons[2] = question;
         list.setCellRenderer(new MyCellRenderer(new_icons));
 
 
@@ -473,8 +479,11 @@ class MyCellRenderer extends JLabel implements ListCellRenderer {
                                                   int index, boolean isSelected, boolean cellHasFocus) {
         String s = value.toString();
         setText(s);
+        setFont(new Font("Helvetica",Font.PLAIN,30));
 
 
+
+//        setMinimumSize(new Dimension(400,200));
         // 这个是设置边框得找找文档!!
         setBorder(BorderFactory.createEmptyBorder());//加入宽度为5的空白边框
 
@@ -492,7 +501,7 @@ class MyCellRenderer extends JLabel implements ListCellRenderer {
             setIcon(icons[index]);//设置图片
 //        }
         setEnabled(list.isEnabled());
-        setFont(list.getFont());
+//        setFont(list.getFont());
         setOpaque(true);
         return this;
     }
@@ -905,8 +914,6 @@ class Recite_way_4 {
         return selected;
     }
     public static void right() {
-        choices.get(right_answer_index).setBackground(Color.GREEN);
-
         selected = (String[])iterator.next();
         int right_choice_int = (int)choice_iterator.next();
         HashSet<Integer> other_choices = new HashSet<>(4);
@@ -929,10 +936,8 @@ class Recite_way_4 {
                 choices.get(i).setText(dic_list.get((int)other_choice.next())[1]);
             }
         }
+        chinese.setBackground(Color.black);
         chinese.setText(selected[0]);
-    }
-    public static void wrong() {
-
     }
     public void main() {
         JFrame main = new JFrame();
