@@ -905,6 +905,8 @@ class Recite_way_4 {
         return selected;
     }
     public static void right() {
+        choices.get(right_answer_index).setBackground(Color.GREEN);
+
         selected = (String[])iterator.next();
         int right_choice_int = (int)choice_iterator.next();
         HashSet<Integer> other_choices = new HashSet<>(4);
@@ -917,6 +919,7 @@ class Recite_way_4 {
         }
         other_choices.remove(right_choice_int);
         right_answer_index = random.nextInt(4);
+        choices.get(right_answer_index).setForeground(Color.black);
         choices.get(right_answer_index).setText(selected[1]);
         Iterator other_choice = other_choices.iterator();
         for (int i = 0; i<4; i++) {
@@ -927,6 +930,9 @@ class Recite_way_4 {
             }
         }
         chinese.setText(selected[0]);
+    }
+    public static void wrong() {
+
     }
     public void main() {
         JFrame main = new JFrame();
