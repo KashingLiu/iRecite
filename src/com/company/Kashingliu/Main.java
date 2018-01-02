@@ -1,6 +1,8 @@
 package com.company.Kashingliu;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
@@ -234,13 +236,17 @@ public class Main  {
         // 对于搜索框添加监控器
         tf.addTextListener((e)-> {
                 try {
+                    // 首先设置表格的行数为0
                     tableModel.setRowCount(0);
+                    // 获取搜索框中输入的字符的长度
                     int len = tf.getText().length();
+                    // 遍历整个字典，对于字典中的每个字符串数组而言
                     for (String[] i : dic_list) {
+                        // 如果说字典英语单词的长度比输入的单词长度要大，并且将英语单词从0截取到输入长度这么多，其和得到的字符串相等时
                         if ((i[0].length()>=len)&&i[0].substring(0, len).equals(tf.getText())) {
-//                            System.out.println(i[0].substring(0, len));
-//                            System.out.println(tf.getText());
+                            // 在表格Model中添加处理后的英语单词和中文意思
                             tableModel.addRow(out(i));
+                            // 重新设定表格Model
                             test_table.setModel(tableModel);
                         }
                     }
@@ -260,60 +266,12 @@ public class Main  {
         down_panel.add(left_panel);
         down_panel.add(Box.createHorizontalStrut(5));
 
-        JPanel second = new JPanel();
-        second.setLayout(new BoxLayout(second,BoxLayout.X_AXIS));
-        second.add(new JButton("test"));
+
+//        JPanel second = new JPanel();
+//        second.setLayout(new BoxLayout(second,BoxLayout.X_AXIS));
+//        second.add(new JButton("test"));
         JPanel third = new JPanel();
         third.setLayout(new BoxLayout(third,BoxLayout.X_AXIS));
-
-        JButton thir = new JButton("test");
-        thir.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (dic_list.size() == 0) {
-                    JOptionPane.showMessageDialog(third,"请在左侧选择词典");
-                } else {
-                    Recite_way_2 reciteWay2 = new Recite_way_2();
-                    reciteWay2.main();
-                }
-            }
-        });
-        third.add(thir);
-
-
-        JButton forth = new JButton("test");
-        forth.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (dic_list.size() == 0) {
-                    JOptionPane.showMessageDialog(third,"请在左侧选择词典");
-                } else {
-                    Recite_way_3 reciteWay3 = new Recite_way_3();
-//                    reciteWay1.aaa = 0;
-                    reciteWay3.main();
-                }
-            }
-        });
-
-
-        JButton fifth = new JButton("test");
-        fifth.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (dic_list.size() == 0) {
-                    JOptionPane.showMessageDialog(third,"请在左侧选择词典");
-                } else {
-                    Recite_way_4 reciteWay4 = new Recite_way_4();
-//                    reciteWay1.aaa = 0;
-                    reciteWay4.main();
-                }
-            }
-        });
-
-
-        third.add(thir);
-        third.add(forth);
-        third.add(fifth);
 
 
         // 增加三个cardlayout的panel
@@ -442,7 +400,41 @@ public class Main  {
     static JPanel panel_two = new JPanel();
     private static DefaultListModel<String> defaultListModel = new DefaultListModel<>();
 
+    static MouseAdapter choose = new MouseAdapter() {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            super.mouseClicked(e);
+            JList init_list = (JList)e.getSource();
+            if (e.getClickCount()==2) {
+                int index = init_list.locationToIndex(e.getPoint());
+                if (index==0) {
+                    if (dic_list.size() == 0) {
+                        JOptionPane.showMessageDialog(panel_two,"请在左侧选择词典");
+                    } else {
+                        Recite_way_2 recite_way_2 = new Recite_way_2();
+                        recite_way_2.main();
+                    }
+                } else if (index == 1) {
+                    if (dic_list.size() == 0) {
+                        JOptionPane.showMessageDialog(panel_two,"请在左侧选择词典");
+                    } else {
+                        Recite_way_3 recite_way_3 = new Recite_way_3();
+                        recite_way_3.main();
+                    }
+                } else if (index == 2) {
+                    if (dic_list.size() == 0) {
+                        JOptionPane.showMessageDialog(panel_two,"请在左侧选择词典");
+                    } else {
+                        Recite_way_4 recite_way_4 = new Recite_way_4();
+                        recite_way_4.main();
+                    }
+                }
+            }
+        }
+    };
+
     public static void panel_two() throws IOException {
+
         JList<String> list = new JList<>(defaultListModel);
         list.setFixedCellHeight(100);
         list.setFixedCellWidth(400);
@@ -450,11 +442,7 @@ public class Main  {
         defaultListModel.addElement("复习模式");
         defaultListModel.addElement("填空模式");
         defaultListModel.addElement("选择模式");
-//        defaultListModel.addElement("  ");
-//        defaultListModel.addElement("  ");
-
-
-//        Icon[] icons = { im1_gray, im1_white, im1_black };
+        list.addMouseListener(choose);
         // 传递的参数，为自己加入的icon
         Icon[] new_icons = new Icon[3];
         new_icons[0] = question;
