@@ -4,3 +4,11 @@ introspective#a. 内省的；反省的
 shrink#vi. (过去分词shrunk)收缩
 crash#n. 暴跌；坠落
 abstract#a. 抽象的
+landscape#n. 地貌；风景
+elevation#n. 提高；高度
+sum#n. 数目
+cycle#n. 循环；周期
+patent#vt. 取得...专利，n. 特许，专利
+mammal#n. 哺乳动物
+shale#n. 页岩
+medium#n. 媒介，手段；方法

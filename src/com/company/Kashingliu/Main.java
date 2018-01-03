@@ -1,13 +1,14 @@
 package com.company.Kashingliu;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.*;
 
-import static com.company.Kashingliu.Main.dic_list;
 import static com.company.Kashingliu.Read_config.for_list;
 import static com.company.Kashingliu.Recite_way_2.hashSet;
 
@@ -44,6 +45,10 @@ public class Main  {
 
     static JPanel up_panel = new JPanel();
     static JPanel down_panel = new JPanel();
+
+    static JPanel panel_two = new JPanel();
+    private static DefaultListModel<String> defaultListModel = new DefaultListModel<>();
+
     // 把用#分隔的单词和汉语意思分开
     private static String[] change_sharp(String a) {
         if (a!=null){
@@ -71,14 +76,6 @@ public class Main  {
         }
         else return null;
     }
-    private static String[] change_is(String a) {
-        if (a!=null){
-            int second_split = a.lastIndexOf("=");
-            String re = a.substring(0,second_split);
-            return re.split("=");
-        }
-        else return null;
-    }
     private static Vector out(String[] a) {
         Vector<String> out = new Vector<>(2);
         out.add(a[0]);
@@ -86,7 +83,6 @@ public class Main  {
         return out;
     }
     public static void main(String[] args) throws Exception {
-
         Container ct = Main.getContentPane();
         ct.setLayout(new BoxLayout(ct,BoxLayout.Y_AXIS));
 
@@ -94,9 +90,6 @@ public class Main  {
         button1.setBorderPainted(false);
         button2.setBorderPainted(false);
         button3.setBorderPainted(false);
-
-        // 把一些变量的定义都放在了函数外边
-
 
         // up_panel是上面的三个按钮所组成的一个panel，全局的
         up_panel.setLayout(new BoxLayout(up_panel,BoxLayout.X_AXIS));
@@ -259,8 +252,6 @@ public class Main  {
         setUp_panel_three(panel_three);
 
 
-
-
         // 关闭时保存
         Main.addWindowListener(new WindowAdapter() {
             @Override
@@ -383,7 +374,7 @@ public class Main  {
         button2.addActionListener(al_second);
         button3.addActionListener(al_third);
 
-        
+
 
 
         // 第一张显示考察单词的那个
@@ -396,13 +387,35 @@ public class Main  {
         Main.add(up_panel);
         Main.add(Box.createVerticalStrut(20));
         Main.add(down_panel);
-        Main.setMinimumSize(new Dimension(600,700));
+        Main.setMinimumSize(new Dimension(700,770));
         Main.setVisible(true);
         Main.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
+    public static void panel_two() throws IOException {
+        JList<String> list = new JList<>(defaultListModel);
+        list.setFixedCellHeight(90);
+        list.setFixedCellWidth(470);
+        list.setVisibleRowCount(6);
+        defaultListModel.addElement("复习模式");
+        defaultListModel.addElement("填空模式");
+        defaultListModel.addElement("选择模式");
+        list.addMouseListener(choose);
+        // 传递的参数，为自己加入的icon
+        Icon[] new_icons = new Icon[3];
+        new_icons[0] = question;
+        new_icons[1] = question;
+        new_icons[2] = question;
+        list.setCellRenderer(new MyCellRenderer(new_icons));
+
+        // 把用户选择的项目所对应的单词文件读到程序中
+        panel_two.setLayout(new BoxLayout(panel_two,BoxLayout.Y_AXIS));
+        panel_two.add(Box.createVerticalStrut(10));
+        panel_two.add(list);
+    }
+
     public static void setUp_panel_three(JPanel panel_three) throws Exception {
-        panel_three.setLayout(new BoxLayout(panel_three,BoxLayout.X_AXIS));
+        panel_three.setLayout(new BoxLayout(panel_three,BoxLayout.Y_AXIS));
         Read_config.main();
         String[] list_three = new String[3+3*(for_list.size()-1)];
         list_three[0] = "背单词时间";
@@ -412,15 +425,90 @@ public class Main  {
             list_three[i] = for_list.get((i-3)/3)[(i-3)%3];
         }
         JList list_third = new JList(list_three);
+        list_third.setFixedCellWidth(160);
+        list_third.setFixedCellHeight(50);
+
+        MouseAdapter Double = new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                JList theList = (JList) e.getSource();
+                // 如果点击次数为2，说明选中
+                if (e.getClickCount()==2) {
+                    // 通过双击的位置获取选择的是哪一项
+                    int index = theList.locationToIndex(e.getPoint());
+                    if (index >= 0) {
+                        Object o = theList.getModel().getElementAt(index);
+
+                        try {
+                            System.out.println((String)o);
+                            show_usr_dic((String)o);
+                        } catch (Exception e2) {
+
+                        }
+                    }
+                }
+            }
+        };
+        list_third.addMouseListener(Double);
+
+        list_third.setFont(new Font("Helvetica",Font.PLAIN,20));
         list_third.setLayoutOrientation(JList.HORIZONTAL_WRAP);  //设置多行显示
         list_third.setVisibleRowCount(list_three.length/3);    //设置行数
 
+        panel_three.add(Box.createVerticalStrut(10));
         panel_three.add(list_third);
     }
 
+    static void show_usr_dic(String time) throws Exception {
+        JFrame main = new JFrame(time+" 的错误单词");
+        JPanel panel = new JPanel();
+        Vector<String> name = new Vector<>(2);
+        name.add("中文");
+        name.add("英语");
+        ArrayList<String[]> usr_dic_list = new ArrayList<>();
+        FileReader fr = new FileReader("usr_dic.txt");
+        BufferedReader bufferedReader = new BufferedReader(fr);
+        String a = "";
+        String b = "";
+        while ((a = bufferedReader.readLine())!=null) {
+            if (a.equals(time)) {
 
-    static JPanel panel_two = new JPanel();
-    private static DefaultListModel<String> defaultListModel = new DefaultListModel<>();
+                b = bufferedReader.readLine();
+                usr_dic_list.add(change_sharp(b));
+                while (b.contains("#")) {
+                    b = bufferedReader.readLine();
+                    if (!b.contains("#")) {
+                        break;
+                    }
+                    usr_dic_list.add(change_sharp(b));
+                }
+                break;
+            }
+        }
+
+        panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
+        DefaultTableModel tableModel = new DefaultTableModel(name,100);
+        JTable test_table = new JTable(tableModel);
+        tableModel.setRowCount(0);
+        test_table.setRowHeight(30);
+        // 表格字体大小
+        test_table.setFont(new Font("Menu.font",Font.PLAIN,18));
+        for (String[] i : usr_dic_list) {
+                tableModel.addRow(out(i));
+                // 重新设定表格Model
+                test_table.setModel(tableModel);
+        }
+
+        test_table.setEnabled(false);
+        // 表格的下拉条
+        JScrollPane jScrollPane = new JScrollPane(test_table);
+        main.add(jScrollPane);
+
+        main.setMinimumSize(new Dimension(600,800));
+        main.setVisible(true);
+    }
+
 
     static MouseAdapter choose = new MouseAdapter() {
         @Override
@@ -455,28 +543,9 @@ public class Main  {
         }
     };
 
-    public static void panel_two() throws IOException {
-
-        JList<String> list = new JList<>(defaultListModel);
-        list.setFixedCellHeight(100);
-        list.setFixedCellWidth(400);
-        list.setVisibleRowCount(6);
-        defaultListModel.addElement("复习模式");
-        defaultListModel.addElement("填空模式");
-        defaultListModel.addElement("选择模式");
-        list.addMouseListener(choose);
-        // 传递的参数，为自己加入的icon
-        Icon[] new_icons = new Icon[3];
-        new_icons[0] = question;
-        new_icons[1] = question;
-        new_icons[2] = question;
-        list.setCellRenderer(new MyCellRenderer(new_icons));
 
 
-        // 把用户选择的项目所对应的单词文件读到程序中
-        panel_two.setLayout(new BoxLayout(panel_two,BoxLayout.X_AXIS));
-        panel_two.add(list);
-    }
+
 }
 
 class MyCellRenderer extends JLabel implements ListCellRenderer {
@@ -517,140 +586,3 @@ class MyCellRenderer extends JLabel implements ListCellRenderer {
     }
 
 }
-
-class CellRenderer extends JLabel implements ListCellRenderer {
-    @Override
-    public Component getListCellRendererComponent(JList list, Object value,
-                                                  int index, boolean isSelected, boolean cellHasFocus) {
-        return this;
-    }
-}
-
-class Recite_way_1 {
-    private static JButton english_word = new JButton("english");
-    private static JButton chinese_word = new JButton("chinese");
-    private static Random random = new Random();
-    private static JPanel english_panel = new JPanel();
-    private static JPanel chinese_panel = new JPanel();
-    public static int aaa = 0;
-    static int aa;
-    static Iterator iterator;
-
-    public void main() {
-        //在list或者table上加一个双击的监听器，如果触发监听器，调用类内的static方法，考察
-        //怎么进入全屏界面啊？？？？
-        JFrame a = new JFrame();
-        Container ct = a.getContentPane();
-        ct.setLayout(new BoxLayout(ct,BoxLayout.Y_AXIS));
-        a.getContentPane().setBackground(Color.darkGray);
-
-        english_panel.setLayout(new BoxLayout(english_panel,BoxLayout.X_AXIS));
-        chinese_panel.setLayout(new BoxLayout(chinese_panel,BoxLayout.X_AXIS));
-        english_panel.setBackground(Color.darkGray);
-        chinese_panel.setBackground(Color.darkGray);
-
-        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice gd = ge.getDefaultScreenDevice();
-        gd.setFullScreenWindow(a);
-        english_word.setBorderPainted(false);
-        chinese_word.setBorderPainted(false);
-
-
-        HashSet<Integer> hashSet = new HashSet<>(10);
-        for (int i = 0; i< 15; i++ ) {
-            if (hashSet.size()==10) {
-                break;
-            }
-            hashSet.add(random.nextInt(dic_list.size()));
-        }
-        ArrayList<Integer> result = new ArrayList<>(hashSet);
-
-
-        iterator = result.iterator();
-
-        aa = (int)iterator.next();
-        String english = dic_list.get(aa)[0];
-        String chinese = dic_list.get(aa)[1];
-
-        english_word.setText(english);
-        english_word.setForeground(Color.white);
-        english_word.setFont(new Font("Helvetica",Font.PLAIN,130));
-//        chinese_word.setText(chinese);
-        chinese_word.setForeground(Color.white);
-        chinese_word.setFont(new Font("Helvetica",Font.PLAIN,80));
-        chinese_panel.setVisible(false);
-
-        a.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        KeyAdapter key = new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-                super.keyTyped(e);
-//                int cnt;
-                if (e.getKeyChar() == KeyEvent.VK_ESCAPE) {
-                    a.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-                    a.dispose();
-//                    System.out.println(aaa);
-                    aaa = 0;
-                }
-                if (e.getKeyChar() == KeyEvent.VK_SPACE) {
-                    if (aaa == 0) {
-                        chinese_word.setText(dic_list.get(aa)[1]);
-                        chinese_panel.setVisible(true);
-                        aaa = 1;
-                    } else if (aaa==1) {
-                        aa = (int)iterator.next();
-                        english_word.setText(dic_list.get(aa)[0]);
-                        chinese_panel.setVisible(false);
-//                        chinese_word.setText(dic_list.get(cnt)[1]);
-                        aaa = 0;
-                    }
-                }
-            }
-        };
-        english_word.addKeyListener(key);
-//        new KeyAdapter() {
-//            @Override
-//            public void keyTyped(KeyEvent e) {
-//                super.keyTyped(e);
-//                if (e.getKeyChar()==KeyEvent.VK_ESCAPE) {
-//                    a.dispose();
-//                }
-//                if (e.getKeyChar()==KeyEvent.VK_SPACE) {
-//                    chinese_panel.setVisible(true);
-//                    chinese_panel.addKeyListener(new KeyAdapter() {
-//                        @Override
-//                        public void keyTyped(KeyEvent e) {
-//                            super.keyTyped(e);
-//                            if (e.getKeyChar()==KeyEvent.VK_SPACE) {
-//                                String english = dic_list.get((int)iterator.next())[0];
-//                                String chinese = dic_list.get((int)iterator.next())[1];
-//                                english_word.setText(english);
-//                                chinese_word.setText(chinese);
-//                                chinese_panel.setVisible(false);
-//                            }
-//                        }
-//                    });
-//                }
-//            }
-//        }
-
-//        System.out.println(flag);
-
-        english_panel.add(english_word);
-        chinese_panel.add(chinese_word);
-
-
-        a.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-
-        a.add(Box.createVerticalStrut(200));
-        a.add(english_panel);
-        a.add(Box.createVerticalStrut(250));
-        a.add(chinese_panel);
-        a.setVisible(true);
-    }
-}
-
-
-
-// 考查方式：单项选择
-// 英文为题目，中文为选项

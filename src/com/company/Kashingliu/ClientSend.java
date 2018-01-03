@@ -32,7 +32,7 @@ import java.net.Socket;
 
 public class ClientSend {
 
-    public static void main() {
+    public static void main(String args[]) {
 
         /**与服务器建立连接的通信句柄*/
         Socket s = null;
