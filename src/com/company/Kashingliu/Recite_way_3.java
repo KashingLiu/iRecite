@@ -4,14 +4,21 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 import static com.company.Kashingliu.Main.dic_list;
 import static com.company.Kashingliu.Recite_way_2.random;
+import static com.company.Kashingliu.Main.wrong_answer;
+import static com.company.Kashingliu.Main.wrong_count;
+import static com.company.Kashingliu.Main.right_count;
 
 public class Recite_way_3 {
 
+    static int rrr_right_answer = 0;
+    static int rrr_wrong_answer = 0;
     static String[] mid;
     static Iterator iter;
     public static ArrayList<String[]> from_int_String_Array(ArrayList<Integer> in_it){
@@ -22,6 +29,16 @@ public class Recite_way_3 {
             out.get(i)[1] = dic_list.get(in_it.get(i))[1];
         }
         return out;
+    }
+    public void add_hashSet() {
+        if (Recite_way_2.hashSet.isEmpty()) {
+            for (int i = 0; i < 35; i++) {
+                if (Recite_way_2.hashSet.size() == 30) {
+                    break;
+                }
+                Recite_way_2.hashSet.add(random.nextInt(dic_list.size()));
+            }
+        }
     }
     public void main() {
         JFrame main_frame = new JFrame();
@@ -38,14 +55,8 @@ public class Recite_way_3 {
         JTextArea answer = new JTextArea(1,20);
         answer.setForeground(Color.black);
 
-        if (Recite_way_2.hashSet.isEmpty()) {
-            for (int i = 0; i < 35; i++) {
-                if (Recite_way_2.hashSet.size() == 30) {
-                    break;
-                }
-                Recite_way_2.hashSet.add(random.nextInt(dic_list.size()));
-            }
-        }
+        add_hashSet();
+
         ArrayList<Integer> result_in_three = new ArrayList<>(Recite_way_2.hashSet);
         ArrayList<String[]> recite_list = from_int_String_Array(result_in_three);
 
@@ -84,15 +95,35 @@ public class Recite_way_3 {
         button.add(Box.createHorizontalStrut(20));
 
 
+        // 退出（结束）后就关闭本页面
         finish.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 answer.setForeground(Color.black);
+                if (!answer.getText().isEmpty()) {
+                    right_count++;
+                }
                 main_frame.dispose();
             }
         });
 
+        main_frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+                super.windowOpened(e);
+            }
 
+            @Override
+            public void windowClosing(WindowEvent e) {
+                super.windowClosing(e);
+                if (answer.getText().equals(mid[0])) {
+                    right_count++;
+                }
+            }
+        });
+
+
+        // 跳过
         next.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -100,11 +131,16 @@ public class Recite_way_3 {
                 if (!iter.hasNext()) {
                     main_frame.dispose();
                 }
+                wrong_count++;
+                wrong_answer.add(mid);
+
                 mid = (String[])iter.next();
                 question.setText(mid[1]);
                 answer.setText("");
             }
         });
+
+
 
         verify.addActionListener(new ActionListener() {
             @Override
@@ -112,7 +148,9 @@ public class Recite_way_3 {
                 answer.setForeground(Color.black);
                 String input = answer.getText();
                 String right = mid[0];
+                int flag = 0;
                 if (input.equals(right)) {
+                    right_count++;
                     mid = (String[])iter.next();
                     question.setText(mid[1]);
                     answer.setText("");
@@ -124,6 +162,9 @@ public class Recite_way_3 {
                     }
                     answer.setForeground(Color.red);
                     answer.setText(mid[0]);
+                    wrong_answer.add(mid);
+                    wrong_count++;
+                    right_count--;
                 }
             }
         });
@@ -138,6 +179,9 @@ public class Recite_way_3 {
             public void actionPerformed(ActionEvent e) {
                 answer.setForeground(Color.red);
                 answer.setText(mid[0]);
+                wrong_answer.add(mid);
+                wrong_count++;
+                right_count--;
             }
         });
 
@@ -153,36 +197,3 @@ public class Recite_way_3 {
     }
 }
 
-class give_input_answer {
-    public static void main(String chinese, String english) {
-        JFrame show = new JFrame("你的答案");
-        Container cp = show.getContentPane();
-        cp.setLayout(new BoxLayout(cp,BoxLayout.Y_AXIS));
-
-        JPanel eng = new JPanel();
-        eng.setLayout(new BoxLayout(eng,BoxLayout.X_AXIS));
-
-        JPanel chi = new JPanel();
-        chi.setLayout(new BoxLayout(chi,BoxLayout.X_AXIS));
-
-        JLabel up = new JLabel(chinese);
-        JLabel down = new JLabel(english);
-
-        up.setFont(new Font("Helvetica",Font.PLAIN,50));
-        down.setFont(new Font("Helvetica",Font.PLAIN,50));
-
-        eng.add(Box.createHorizontalStrut(5));
-        eng.add(up);
-        eng.add(Box.createHorizontalStrut(5));
-
-
-        chi.add(Box.createHorizontalStrut(5));
-        chi.add(down);
-        chi.add(Box.createHorizontalStrut(5));
-
-        show.add(eng);
-        show.add(chi);
-        show.setVisible(true);
-        show.setMinimumSize(new Dimension(350,250));
-    }
-}

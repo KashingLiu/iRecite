@@ -11,9 +11,12 @@ import static com.company.Kashingliu.Main.dic_list;
 import static com.company.Kashingliu.Recite_way_2.hashSet;
 
 public class Main  {
+    static int right_count = 0;
+    static int wrong_count = 0;
+    static ArrayList<String[]> wrong_answer = new ArrayList<>(2000);
+    static Date now;
     // 最大的frame，设置成boxlayout，横向的
     static JFrame Main = new JFrame("天天背单词");
-
     // 第一个图标，单词搜索
     static ImageIcon im1_white = new ImageIcon("/Users/kashingliu/Downloads/tsg/icon/search3.png");
     static ImageIcon im1_gray = new ImageIcon("/Users/kashingliu/Downloads/tsg/icon/search1.png");
@@ -32,7 +35,6 @@ public class Main  {
     static JRadioButton button1 = new JRadioButton(im1_white);
     static JRadioButton button2 = new JRadioButton(im2_gray);
     static JRadioButton button3 = new JRadioButton(im3_gray);
-
 
     // 把单词放入Dic_list
     static ArrayList<String[]> dic_list = new ArrayList<>();
@@ -84,7 +86,6 @@ public class Main  {
         return out;
     }
     public static void main(String[] args) throws Exception {
-        Email.main2("624453893@qq.com");
         Container ct = Main.getContentPane();
         ct.setLayout(new BoxLayout(ct,BoxLayout.Y_AXIS));
 
@@ -263,9 +264,6 @@ public class Main  {
         down_panel.add(Box.createHorizontalStrut(5));
 
 
-//        JPanel second = new JPanel();
-//        second.setLayout(new BoxLayout(second,BoxLayout.X_AXIS));
-//        second.add(new JButton("test"));
         JPanel third = new JPanel();
         third.setLayout(new BoxLayout(third,BoxLayout.X_AXIS));
 
