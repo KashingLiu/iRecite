@@ -9,16 +9,11 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import static com.company.Kashingliu.Main.dic_list;
+import static com.company.Kashingliu.Main.*;
 import static com.company.Kashingliu.Recite_way_2.random;
-import static com.company.Kashingliu.Main.wrong_answer;
-import static com.company.Kashingliu.Main.wrong_count;
-import static com.company.Kashingliu.Main.right_count;
 
 public class Recite_way_3 {
 
-    static int rrr_right_answer = 0;
-    static int rrr_wrong_answer = 0;
     static String[] mid;
     static Iterator iter;
     public static ArrayList<String[]> from_int_String_Array(ArrayList<Integer> in_it){
@@ -30,7 +25,7 @@ public class Recite_way_3 {
         }
         return out;
     }
-    public void add_hashSet() {
+    public static void add_hashSet() {
         if (Recite_way_2.hashSet.isEmpty()) {
             for (int i = 0; i < 35; i++) {
                 if (Recite_way_2.hashSet.size() == 30) {
@@ -102,6 +97,7 @@ public class Recite_way_3 {
                 answer.setForeground(Color.black);
                 if (!answer.getText().isEmpty()) {
                     right_count++;
+                    all_count++;
                 }
                 main_frame.dispose();
             }
@@ -118,6 +114,7 @@ public class Recite_way_3 {
                 super.windowClosing(e);
                 if (answer.getText().equals(mid[0])) {
                     right_count++;
+                    all_count++;
                 }
             }
         });
@@ -133,7 +130,7 @@ public class Recite_way_3 {
                 }
                 wrong_count++;
                 wrong_answer.add(mid);
-
+                all_count++;
                 mid = (String[])iter.next();
                 question.setText(mid[1]);
                 answer.setText("");
@@ -151,6 +148,7 @@ public class Recite_way_3 {
                 int flag = 0;
                 if (input.equals(right)) {
                     right_count++;
+                    all_count++;
                     mid = (String[])iter.next();
                     question.setText(mid[1]);
                     answer.setText("");
@@ -164,7 +162,9 @@ public class Recite_way_3 {
                     answer.setText(mid[0]);
                     wrong_answer.add(mid);
                     wrong_count++;
+                    all_count++;
                     right_count--;
+                    all_count--;
                 }
             }
         });
@@ -173,7 +173,6 @@ public class Recite_way_3 {
         right_answer.setText(mid[0]);
         right_answer.setForeground(Color.red);
         right_answer.setFont(new Font("Helvetica",Font.PLAIN,40));
-
         give_answer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -182,6 +181,8 @@ public class Recite_way_3 {
                 wrong_answer.add(mid);
                 wrong_count++;
                 right_count--;
+                all_count++;
+                all_count--;
             }
         });
 

@@ -8,13 +8,14 @@ import java.io.*;
 import java.util.*;
 
 import static com.company.Kashingliu.Main.dic_list;
+import static com.company.Kashingliu.Read_config.for_list;
 import static com.company.Kashingliu.Recite_way_2.hashSet;
 
 public class Main  {
     static int right_count = 0;
     static int wrong_count = 0;
+    static int all_count = 0;
     static ArrayList<String[]> wrong_answer = new ArrayList<>(2000);
-    static Date now;
     // 最大的frame，设置成boxlayout，横向的
     static JFrame Main = new JFrame("天天背单词");
     // 第一个图标，单词搜索
@@ -43,7 +44,6 @@ public class Main  {
 
     static JPanel up_panel = new JPanel();
     static JPanel down_panel = new JPanel();
-
     // 把用#分隔的单词和汉语意思分开
     private static String[] change_sharp(String a) {
         if (a!=null){
@@ -86,6 +86,7 @@ public class Main  {
         return out;
     }
     public static void main(String[] args) throws Exception {
+
         Container ct = Main.getContentPane();
         ct.setLayout(new BoxLayout(ct,BoxLayout.Y_AXIS));
 
@@ -194,6 +195,7 @@ public class Main  {
         // 搜索框
         java.awt.TextField tf = new java.awt.TextField(12);
         JTable test_table = new JTable(tableModel);
+        test_table.setEnabled(false);
         // 表格的下拉条
         JScrollPane jScrollPane = new JScrollPane(test_table);
         // 搜索框对应的JPanel
@@ -215,18 +217,7 @@ public class Main  {
         // 搜索栏的最大尺寸和字体
         tf.setMaximumSize(new Dimension(200,30));
         tf.setFont(new Font("Menu.font",Font.PLAIN,15));
-//        读文件的
-//        FileReader a = new FileReader("/Users/Kashingliu/Documents/EnglishDictionary/Dict/College_Grade6.txt");
-//        BufferedReader br = new BufferedReader(a);
-//        // 读取文件，对文件进行按行划分，用change_sharp来表示中间是#的，用**_is来表示中间是等号的
-//        String string = "";
-//        while ( string != null ) {
-//            string = br.readLine();
-//            if (string!=null) {
-//                dic_list.add(change_sharp(string));
-//                tableModel.addRow(change_sharp(string));
-//            }
-//        }
+
 
         // main使用BoxLayout，纵方向
         main.setLayout(new BoxLayout(main,BoxLayout.Y_AXIS));
@@ -264,14 +255,30 @@ public class Main  {
         down_panel.add(Box.createHorizontalStrut(5));
 
 
-        JPanel third = new JPanel();
-        third.setLayout(new BoxLayout(third,BoxLayout.X_AXIS));
+        JPanel panel_three = new JPanel();
+        setUp_panel_three(panel_three);
+
+
+
+
+        // 关闭时保存
+        Main.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                super.windowClosing(e);
+                try {
+                    Save.main();
+                    Save.usr_dic();
+                } catch (Exception e1) {
+                }
+            }
+        });
 
 
         // 增加三个cardlayout的panel
         right_panel.add(main,"first");
         right_panel.add(panel_two,"second");
-        right_panel.add(third,"third");
+        right_panel.add(panel_three,"third");
 
 
         // 这些是给那三个按钮添加监听器
@@ -376,6 +383,8 @@ public class Main  {
         button2.addActionListener(al_second);
         button3.addActionListener(al_third);
 
+        
+
 
         // 第一张显示考察单词的那个
         cardLayout.show(right_panel,"first");
@@ -391,6 +400,25 @@ public class Main  {
         Main.setVisible(true);
         Main.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
+
+    public static void setUp_panel_three(JPanel panel_three) throws Exception {
+        panel_three.setLayout(new BoxLayout(panel_three,BoxLayout.X_AXIS));
+        Read_config.main();
+        String[] list_three = new String[3+3*(for_list.size()-1)];
+        list_three[0] = "背单词时间";
+        list_three[1] = "背单词总数";
+        list_three[2] = "上次错误总数";
+        for (int i = 3; i< 3+3*(for_list.size()-1); i++) {
+            list_three[i] = for_list.get((i-3)/3)[(i-3)%3];
+        }
+        JList list_third = new JList(list_three);
+        list_third.setLayoutOrientation(JList.HORIZONTAL_WRAP);  //设置多行显示
+        list_third.setVisibleRowCount(list_three.length/3);    //设置行数
+
+        panel_three.add(list_third);
+    }
+
+
     static JPanel panel_two = new JPanel();
     private static DefaultListModel<String> defaultListModel = new DefaultListModel<>();
 

@@ -48,3 +48,4 @@ medicine1.txt#医学英语第一册
 medicine2.txt#医学英语第二册
 medicine3.txt#医学英语第三册
 Computer.txt#计算机词汇
+Usr_dic.txt#生词本

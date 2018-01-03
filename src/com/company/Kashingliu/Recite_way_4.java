@@ -4,11 +4,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import static com.company.Kashingliu.Main.dic_list;
+import static com.company.Kashingliu.Main.*;
 import static com.company.Kashingliu.Recite_way_2.hashSet;
 import static com.company.Kashingliu.Recite_way_2.iterator;
 import static com.company.Kashingliu.Recite_way_2.random;
@@ -19,6 +21,7 @@ public class Recite_way_4 {
     static int right_answer_index;
     static ArrayList<JButton> choices;
     static Iterator choice_iterator;
+    static int flag = 0;
     public static ArrayList<String[]> from_int_String_Array(ArrayList<Integer> in_it){
         ArrayList<String[]> out = new ArrayList<>(30);
         for (int i = 0;i<30;i++) {
@@ -57,6 +60,37 @@ public class Recite_way_4 {
         chinese.setBackground(Color.black);
         chinese.setText(selected[0]);
     }
+
+    private class MyActionListener implements ActionListener{
+        JButton init;
+        MyActionListener(JButton out) {
+            init = out;
+        }
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (init.getText().equals(getSelected()[1])) {
+                right();
+                all_count++;
+            } else {
+                for (String[] i : dic_list) {
+                    if (i[1].equals(init.getText())) {
+                        give_input_answer.main(i[1],i[0]);
+                        wrong_answer.add(i);
+                        wrong_count++;
+                        all_count++;
+                    }
+                }
+                // 如果说flag=0的话就加进去当前的，否则不加入，目的是防止一个单词多次加入错词本
+                if (flag==0) {
+                    wrong_answer.add(getSelected());
+                    wrong_count++;
+                    all_count++;
+                    flag=1;
+                }
+            }
+        }
+    }
+
     public void main() {
         JFrame main = new JFrame();
         Container ct = main.getContentPane();
@@ -92,16 +126,17 @@ public class Recite_way_4 {
         choices.add(choice3);
         choices.add(choice4);
 
+        main.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                super.windowClosing(e);
+
+            }
+        });
+
         // 以第二种方式为基准，如果第二种没点击的话，hashSet就是空的，那就更新
         // 否则的话就用第二种的那个
-        if (Recite_way_2.hashSet.isEmpty()) {
-            for (int i = 0; i < 35; i++) {
-                if (Recite_way_2.hashSet.size() == 30) {
-                    break;
-                }
-                Recite_way_2.hashSet.add(random.nextInt(dic_list.size()));
-            }
-        }
+        Recite_way_3.add_hashSet();
 
         // result是选出来的下标构成的一个数组
         ArrayList<Integer> result = new ArrayList<>(hashSet);
@@ -177,41 +212,20 @@ public class Recite_way_4 {
         answer.add(D);
         answer.add(Box.createVerticalGlue());
 
-        choice1.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (choice1.getText().equals(getSelected()[1])) {
-                    right();
-                }
-            }
-        });
 
-        choice2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (choice2.getText().equals(getSelected()[1])) {
-                    right();
-                }
-            }
-        });
+        MyActionListener al1 = new MyActionListener(choice1);
+        choice1.addActionListener(al1);
 
-        choice3.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (choice3.getText().equals(getSelected()[1])) {
-                    right();
-                }
-            }
-        });
 
-        choice4.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (choice4.getText().equals(getSelected()[1])) {
-                    right();
-                }
-            }
-        });
+        MyActionListener al2 = new MyActionListener(choice2);
+        choice2.addActionListener(al2);
+
+        MyActionListener al3 = new MyActionListener(choice3);
+        choice3.addActionListener(al3);
+
+        MyActionListener al4 = new MyActionListener(choice4);
+        choice4.addActionListener(al4);
+
 
         main.add(Box.createVerticalStrut(20));
         main.add(question);

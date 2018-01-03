@@ -41,7 +41,7 @@ public class ClientSend {
          * 如果使用绝对路径，不要忘记使用'/'和'\'的区别
          * 具体区别，请读者自行查询
          * */
-        File sendfile = new File("a.txt");
+        File sendfile = new File("config.txt");
         /**定义文件输入流，用来打开、读取即将要发送的文件*/
         FileInputStream fis = null;
         /**定义byte数组来作为数据包的存储数据包*/
