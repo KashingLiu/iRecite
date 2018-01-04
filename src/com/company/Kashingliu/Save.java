@@ -6,9 +6,7 @@ import java.io.FileWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static com.company.Kashingliu.Main.all_count;
-import static com.company.Kashingliu.Main.wrong_answer;
-import static com.company.Kashingliu.Main.wrong_count;
+import static com.company.Kashingliu.Main.*;
 
 public class Save {
     static JList list;
@@ -31,7 +29,7 @@ public class Save {
         Date now = new Date();
         SimpleDateFormat format0 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         String time = format0.format(now.getTime());
-        FileWriter fw = new FileWriter("config.txt",true);
+        FileWriter fw = new FileWriter(usr_email+".txt",true);
         fw.write(time+"\n");
         fw.write(Integer.toString(all_count)+"\n");
         fw.write(Integer.toString(wrong_count)+"\n");

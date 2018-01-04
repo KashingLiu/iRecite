@@ -1,8 +1,6 @@
 package com.company.Kashingliu;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
@@ -16,6 +14,7 @@ public class Main  {
     static int right_count = 0;
     static int wrong_count = 0;
     static int all_count = 0;
+    static String usr_email = JOptionPane.showInputDialog("邮箱");
     static ArrayList<String[]> wrong_answer = new ArrayList<>(2000);
     // 最大的frame，设置成boxlayout，横向的
     static JFrame Main = new JFrame("天天背单词");
@@ -260,6 +259,7 @@ public class Main  {
                 try {
                     Save.main();
                     Save.usr_dic();
+                    ClientSend.main();
                 } catch (Exception e1) {
                 }
             }
@@ -439,12 +439,10 @@ public class Main  {
                     int index = theList.locationToIndex(e.getPoint());
                     if (index >= 0) {
                         Object o = theList.getModel().getElementAt(index);
-
                         try {
                             System.out.println((String)o);
                             show_usr_dic((String)o);
                         } catch (Exception e2) {
-
                         }
                     }
                 }
@@ -473,7 +471,6 @@ public class Main  {
         String b = "";
         while ((a = bufferedReader.readLine())!=null) {
             if (a.equals(time)) {
-
                 b = bufferedReader.readLine();
                 usr_dic_list.add(change_sharp(b));
                 while (b.contains("#")) {
@@ -481,12 +478,11 @@ public class Main  {
                     if (!b.contains("#")) {
                         break;
                     }
-                    usr_dic_list.add(change_sharp(b));
+                    usr_dic_list.add(change_sharp_list(b));
                 }
                 break;
             }
         }
-
         panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
         DefaultTableModel tableModel = new DefaultTableModel(name,100);
         JTable test_table = new JTable(tableModel);
@@ -499,16 +495,17 @@ public class Main  {
                 // 重新设定表格Model
                 test_table.setModel(tableModel);
         }
-
         test_table.setEnabled(false);
         // 表格的下拉条
         JScrollPane jScrollPane = new JScrollPane(test_table);
         main.add(jScrollPane);
-
         main.setMinimumSize(new Dimension(600,800));
         main.setVisible(true);
     }
 
+//    static void show_alert() {
+//        JOptionPane.showInputDialog("请输入您的邮箱");
+//    }
 
     static MouseAdapter choose = new MouseAdapter() {
         @Override

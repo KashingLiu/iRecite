@@ -21,8 +21,8 @@ public class Email {
     // 收件人邮箱（替换为自己知道的有效邮箱）
 
 
-    public static void main2(String receive_email) throws Exception {
-        String receiveMailAccount = receive_email;
+    public static void main(String args[]) throws Exception {
+        String receiveMailAccount = args[0];
         // 1. 创建参数配置, 用于连接邮件服务器的参数配置
         Properties props = new Properties();                    // 参数配置
         props.setProperty("mail.transport.protocol", "smtp");   // 使用的协议（JavaMail规范要求）
@@ -74,6 +74,7 @@ public class Email {
 
         // 7. 关闭连接
         transport.close();
+        System.out.println(args[0]);
     }
 
     /**
